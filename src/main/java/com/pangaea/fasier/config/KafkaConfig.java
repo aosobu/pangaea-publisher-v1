@@ -1,7 +1,5 @@
 package com.pangaea.fasier.config;
 
-import com.pangaea.fasier.model.RequestModel;
-import com.pangaea.fasier.model.ResponseModel;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -22,7 +20,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Configuration
+@Configuration
 public class KafkaConfig {
 
     @Value("${kafka.bootstrap-servers}")
@@ -47,36 +45,38 @@ public class KafkaConfig {
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "helloworld");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
         return props;
     }
 
     @Bean
-    public ProducerFactory<String, RequestModel> producerFactory() {
+    public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, RequestModel> kafkaTemplate() {
+    public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ReplyingKafkaTemplate<String, RequestModel, ResponseModel> replyKafkaTemplate(ProducerFactory<String, RequestModel> pf,
-                                                                                         KafkaMessageListenerContainer<String, ResponseModel> container){
+    public ReplyingKafkaTemplate<String, String, String> replyKafkaTemplate(ProducerFactory<String, String> pf,
+                                                                                         KafkaMessageListenerContainer<String, String> container){
         return new ReplyingKafkaTemplate<>(pf, container);
     }
 
     @Bean
-    public KafkaMessageListenerContainer<String, ResponseModel> replyContainer(ConsumerFactory<String, ResponseModel> cf) {
+    public KafkaMessageListenerContainer<String, String> replyContainer(ConsumerFactory<String, String> cf) {
         ContainerProperties containerProperties = new ContainerProperties(requestReplyTopic);
         return new KafkaMessageListenerContainer<>(cf, containerProperties);
     }
 
     @Bean
-    public ConsumerFactory<String, ResponseModel> consumerFactory() {
+    public ConsumerFactory<String, String> consumerFactory() {
 
-        JsonDeserializer<ResponseModel> deserializer = new JsonDeserializer<>(ResponseModel.class);
+        JsonDeserializer<String> deserializer = new JsonDeserializer<>(String.class);
         deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");
         deserializer.setUseTypeMapperForKey(true);
@@ -85,8 +85,8 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, ResponseModel>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ResponseModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setReplyTemplate(kafkaTemplate());
         return factory;

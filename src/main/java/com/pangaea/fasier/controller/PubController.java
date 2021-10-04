@@ -1,6 +1,5 @@
 package com.pangaea.fasier.controller;
 
-import com.pangaea.fasier.model.PublishRequestBody;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

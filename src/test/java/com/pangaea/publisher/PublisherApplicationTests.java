@@ -1,7 +1,6 @@
 package com.pangaea.publisher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pangaea.fasier.model.PublishRequestBody;
 import org.junit.Before;
 import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
