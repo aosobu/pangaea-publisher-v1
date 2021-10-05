@@ -1,6 +1,5 @@
 package com.pangaea.publisher;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +39,12 @@ class PublisherApplicationTests {
 				.build();
 	}
 
-	static String asJsonString(PublishRequestBody map) {
-		try {
-			return new ObjectMapper().writeValueAsString(map);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	static String asJsonString(PublishRequestBody map) {
+//		try {
+//			return new ObjectMapper().writeValueAsString(map);
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 }
