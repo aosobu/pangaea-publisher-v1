@@ -1,5 +1,6 @@
 package com.pangaea.publisher;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.HashMap;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -39,12 +42,12 @@ class PublisherApplicationTests {
 				.build();
 	}
 
-//	static String asJsonString(PublishRequestBody map) {
-//		try {
-//			return new ObjectMapper().writeValueAsString(map);
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
+	static String asJsonString(HashMap<String, Object> map) {
+		try {
+			return new ObjectMapper().writeValueAsString(map);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

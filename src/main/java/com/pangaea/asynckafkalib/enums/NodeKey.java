@@ -3,6 +3,7 @@ package com.pangaea.asynckafkalib.enums;
 public enum NodeKey {
 
     PUBLISHER_TOPIC("topic"),
+    PUBLISHER_DATA("data"),
     PUBLISHER_NEWSLETTER("newsletter");
 
     private String nodeKey;
